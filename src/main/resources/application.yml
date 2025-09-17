@@ -1,0 +1,32 @@
+server:
+  servlet:
+    context-path: /yis-api
+  port: 8888
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://cs.nes.com.cn:3308/demo?useSSL=false&serverTimezone=UTC&characterEncoding=utf8
+    username: ctcetest
+    password: NES@ctceZO1B3
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# 配置mybatis-plus
+mybatis-plus:
+  # 配置mapper.xml文件的路径
+  mapper-locations: classpath*:/mapper/*.xml
+  # 配置实体类的路径
+  type-aliases-package: cn.com.yis.domain
+  # 开启驼峰命名映射
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+
+# Logger Config
+logging:
+  level:
+    com.baomidou.mybatisplus.samples.quickstart: debug
