@@ -20,7 +20,7 @@ mybatis-plus:
   # 开启驼峰命名映射
   configuration:
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto
@@ -28,5 +28,7 @@ mybatis-plus:
 
 # Logger Config
 logging:
-  level:
-    com.baomidou.mybatisplus.samples.quickstart: debug
+  config: classpath:logback-spring.xml
+#  level:
+#    cn.com.yis.mapper: debug
+
