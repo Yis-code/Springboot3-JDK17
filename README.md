@@ -24,5 +24,8 @@
 # 文档参考
 
 ## MyBatis-Plus
-
 1、[SQL拦截器自动翻译 -- 控制台打印完整sql](https://juejin.cn/post/7443088538491568169)
+
+## Spring Boot 3
+
+1、[Spring Boot 3 使用](https://www.bilibili.com/video/BV18PYxzHE5U?spm_id_from=333.788.player.switch&vd_source=782280bad3d8ad598ad1d492155cbf1f&p=12)
