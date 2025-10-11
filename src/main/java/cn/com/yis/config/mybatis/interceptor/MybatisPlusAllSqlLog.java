@@ -1,4 +1,4 @@
-package cn.com.yis.interceptor;
+package cn.com.yis.config.mybatis.interceptor;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import lombok.extern.log4j.Log4j2;

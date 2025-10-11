@@ -1,4 +1,4 @@
-package cn.com.yis.interceptor;
+package cn.com.yis.config.mybatis.interceptor;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.cache.CacheKey;
