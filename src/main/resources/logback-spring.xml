@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
-    <!--日志存储路径-->
-    <property name="log" value="log"/>
+    <!-- 从Spring环境中获取变量 -->
+    <springProperty scope="context" name="logLevel" source="logging.level.root" defaultValue="INFO"/>
+    <springProperty scope="context" name="logPath" source="logging.path" defaultValue="log"/>
+    <springProperty scope="context" name="appName" source="spring.application.name" defaultValue="springboot3-jdk17"/>
+
+    <!-- 统一的日志输出格式 -->
+    <property name="LOG_PATTERN"
+              value="[%X{TRACE_ID}][%X{Authorization_UID}][%X{Authorization_UNAME}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{50}[%10method,%line] - %msg%n"/>
+
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <!--输出格式化-->
-            <pattern>[%X{TRACE_ID}][%X{Authorization_UID}][%X{Authorization_UNAME}] %d{yyyy-MM-dd HH:mm:ss.SSS}
-                [%thread] %-5level %logger{50}[%10method,%line] - %msg%n
-            </pattern>
+            <!-- 使用统一的输出格式 -->
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+
     <!-- 按天生成日志文件 -->
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--日志文件名-->
-            <FileNamePattern>${log}/%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--日志文件名，使用从Spring获取的应用名称-->
+            <FileNamePattern>${logPath}/${appName}-%d{yyyy-MM-dd}.log</FileNamePattern>
             <!--保留天数-->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>[%X{TRACE_ID}][%X{Authorization_UID}][%X{Authorization_UNAME}] %d{yyyy-MM-dd HH:mm:ss.SSS}
-                [%thread] %-5level %logger{50} - %msg%n
-            </pattern>
+            <!-- 使用统一的输出格式 -->
+            <pattern>${LOG_PATTERN}</pattern>
         </encoder>
         <!--日志文件最大的大小-->
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -30,9 +35,66 @@
         </triggeringPolicy>
     </appender>
 
-    <!-- 日志输出级别 -->
-    <root level="INFO">
-        <appender-ref ref="console"/>
-        <appender-ref ref="file"/>
-    </root>
+    <!-- ERROR级别日志文件 -->
+    <appender name="errorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${logPath}/${appName}-error-%d{yyyy-MM-dd}.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 开发环境配置 -->
+    <springProfile name="dev">
+        <root level="DEBUG">
+            <appender-ref ref="console"/>
+        </root>
+        <!-- 特定包的日志级别 -->
+        <logger name="cn.com.yis.mapper" level="DEBUG" additivity="false">
+            <appender-ref ref="console"/>
+        </logger>
+    </springProfile>
+
+    <!-- 测试环境配置 -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+            <appender-ref ref="errorFile"/>
+        </root>
+        <logger name="cn.com.yis.mapper" level="INFO" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file"/>
+        </logger>
+    </springProfile>
+
+    <!-- 生产环境配置 -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="file"/>
+            <appender-ref ref="errorFile"/>
+        </root>
+        <!-- 生产环境通常关闭控制台输出，只输出到文件 -->
+        <logger name="cn.com.yis" level="INFO" additivity="false">
+            <appender-ref ref="file"/>
+            <appender-ref ref="errorFile"/>
+        </logger>
+        <!-- 第三方库的日志级别控制 -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.apache" level="WARN"/>
+    </springProfile>
+
+    <!-- 默认配置，当没有指定环境时使用 -->
+    <springProfile name="default">
+        <root level="${logLevel}">
+            <appender-ref ref="console"/>
+        </root>
+    </springProfile>
 </configuration>

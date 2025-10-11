@@ -1,0 +1,7 @@
+# 测试环境配置
+logging:
+  level:
+    root: INFO
+    cn.com.yis.mapper: INFO
+    org.springframework: WARN
+    org.apache: WARN
