@@ -34,3 +34,14 @@ logging:
   level:
     root: INFO
     cn.com.yis.mapper: debug
+
+
+
+user:
+  name: yishuai
+  age: 11
+  phone: 13800000000
+  email: yishuai@example.com
+  address:
+    areaCode: 11
+    city: 北京

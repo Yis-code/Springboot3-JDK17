@@ -2,3 +2,9 @@
 logging:
   level:
     cn.com.yis.mapper: DEBUG
+
+
+user:
+  name: yishuai
+  age: 11
+  email: yishuai@example.com
