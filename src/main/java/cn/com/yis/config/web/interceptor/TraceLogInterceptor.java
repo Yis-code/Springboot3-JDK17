@@ -1,4 +1,4 @@
-package cn.com.yis.config.mybatis.interceptor;
+package cn.com.yis.config.web.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

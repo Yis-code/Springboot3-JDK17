@@ -2,10 +2,12 @@ package cn.com.yis.rest;
 
 import cn.com.yis.domain.SaleOrder;
 import cn.com.yis.service.SaleOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/order")
 public class SaleOrderRest {
@@ -32,6 +34,7 @@ public class SaleOrderRest {
      */
     @RequestMapping("/detail")
     public SaleOrder detail(Long id) {
+        log.info("查询订单详情，id={}", id);
         return saleOrderService.getById(id);
     }
 

@@ -1,6 +1,6 @@
 package cn.com.yis.config.web;
 
-import cn.com.yis.config.mybatis.interceptor.TraceLogInterceptor;
+import cn.com.yis.config.web.interceptor.TraceLogInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
