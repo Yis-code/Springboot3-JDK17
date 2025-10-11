@@ -4,9 +4,6 @@ server:
   port: 8888
 
 spring:
-  config:
-    activate:
-      on-profile: dev
   application:
     name: springboot3-jdk17-dev
   datasource:
@@ -33,7 +30,7 @@ mybatis-plus:
 logging:
   config: classpath:logback-spring.xml
   file:
-    path: log
+    path: log/
   level:
     root: INFO
     cn.com.yis.mapper: debug

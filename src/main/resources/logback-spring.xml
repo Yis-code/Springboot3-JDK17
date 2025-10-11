@@ -7,7 +7,7 @@
 
     <!-- 统一的日志输出格式 -->
     <property name="LOG_PATTERN"
-              value="[%X{TRACE_ID}][%X{Authorization_UID}][%X{Authorization_UNAME}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{50}[%10method,%line] - %msg%n"/>
+              value="[%X{TRACE_ID}][%X{Authorization_UID}][%X{Authorization_UNAME}] %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%-5level] %logger{36}[%L] - %msg%n"/>
 
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
