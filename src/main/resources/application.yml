@@ -42,7 +42,7 @@ user:
   #  age: 11
   age: ${random.int(10)}
   phone: 13800000000
-  email: yishuai@example.com
+  #  email: yishuai@example.com
   address:
     areaCode: 11
     city: 北京
