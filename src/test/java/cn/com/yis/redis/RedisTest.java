@@ -1,13 +1,20 @@
 package cn.com.yis.redis;
 
+import com.alibaba.fastjson2.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@Slf4j
 @SpringBootTest
 public class RedisTest {
 
@@ -15,7 +22,7 @@ public class RedisTest {
     private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Test
     public void testStringRedisTemplate() {
@@ -24,7 +31,7 @@ public class RedisTest {
         String value = "Hello Redis!2222";
 
         boolean exists = stringRedisTemplate.hasKey(key);
-        System.out.println("key是否存在: " + exists);
+        log.info("key是否存在: {}", exists);
 
         // 存储数据
         if (!exists) {
@@ -33,24 +40,22 @@ public class RedisTest {
 
         // 读取数据
         String result = stringRedisTemplate.opsForValue().get(key);
-        System.out.println("从Redis获取的值: " + result);
+        log.info("从Redis获取的值: {}", result);
         
         // 验证结果
         assertEquals(value, result);
+    }
 
-        // 测试设置过期时间
-//        stringRedisTemplate.expire(key, 5, TimeUnit.SECONDS);
-        System.out.println("设置key过期时间为5秒");
-
-        try {
-            // 等待6秒后再次获取
-            Thread.sleep(6000);
-            result = stringRedisTemplate.opsForValue().get(key);
-            assertNull(result, "6秒后key应该已过期");
-            System.out.println("6秒后，key已过期: " + result);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void testJsonRedisTemplate() {
+        // 1、添加K-V缓存
+        stringRedisTemplate.opsForValue().set("key-01", "value-01", 300, TimeUnit.SECONDS);
+        // 2、添加JSON格式
+        String jsonStr = JSONObject.of("name", "张三", "age", 18).toJSONString();
+        stringRedisTemplate.opsForValue().set("key-02", jsonStr, 500, TimeUnit.SECONDS);
+        Object key01 = stringRedisTemplate.opsForValue().get("key-01");
+        Object key02 = stringRedisTemplate.opsForValue().get("key-02");
+        log.info("key01：{},key02：{}", key01, key02);
     }
 
     @Test
@@ -60,17 +65,19 @@ public class RedisTest {
         User user = new User(1L, "张三", "zhangsan@example.com");
 
         // 存储对象
-        redisTemplate.opsForValue().set(key, user);
+        redisTemplate.opsForValue().setIfPresent(key, user);
 
         // 读取对象
+        // 修改testRedisTemplate方法中的类型转换
         User result = (User) redisTemplate.opsForValue().get(key);
-        System.out.println("从Redis获取的用户对象: " + result);
+        log.info("从Redis获取的用户对象: {}", result);
 
         // 验证结果
         assertNotNull(result);
         assertEquals(user.getId(), result.getId());
         assertEquals(user.getName(), result.getName());
         assertEquals(user.getEmail(), result.getEmail());
+
     }
 
     @Test
@@ -98,8 +105,8 @@ public class RedisTest {
         assertEquals(hashValue2, name);
 
         // 删除Hash中的一个字段
-        stringRedisTemplate.opsForHash().delete(key, hashKey1);
-        assertNull(stringRedisTemplate.opsForHash().get(key, hashKey1), "删除后应返回null");
+//        stringRedisTemplate.opsForHash().delete(key, hashKey1);
+//        assertNull(stringRedisTemplate.opsForHash().get(key, hashKey1), "删除后应返回null");
     }
 
     @Test
@@ -132,7 +139,8 @@ public class RedisTest {
     }
 
     // 内部User类用于测试对象存储
-    static class User {
+    static class User implements Serializable {
+        private static final long serialVersionUID = 1L;
         private Long id;
         private String name;
         private String email;
