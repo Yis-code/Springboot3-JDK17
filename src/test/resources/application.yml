@@ -63,12 +63,12 @@ logging:
 
 
 
-#user:
-#  #  age: 11
-#  age: ${random.int(10)}
-#  phone: 13800000000
-#  email: yishuai@example.com
-#  address:
-#    areaCode: 11
-#    city: 北京
-#    description: ${user.name}家在${user.address.city}
+user:
+#  name: yishuai
+  age: ${random.int(10)}
+  phone: 13800000000
+  email: yishuai@example.com
+  address:
+    areaCode: 11
+    city: 北京
+    description: ${user.name}家在${user.address.city}
