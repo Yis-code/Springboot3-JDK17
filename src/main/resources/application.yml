@@ -17,3 +17,13 @@ spring:
         refresh-enabled: true
         server-addr: ${spring.cloud.nacos.server-addr}
         file-extension: yaml
+dubbo:
+  application:
+#    name: ${spring.application.name}
+  registry:
+    address: nacos://${spring.cloud.nacos.server-addr}
+  protocol:
+    name: dubbo
+    port: -1
+  scan:
+    base-packages: cn.com.yis
